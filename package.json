@@ -1,0 +1,24 @@
+{
+    "name": "hyper-fresh-material",
+    "version": "1.0.0",
+    "description": "Fresh Material theme for Hyper",
+    "main": "index.js",
+    "license": "MIT",
+    "keywords": [
+        "hyper",
+        "hyper-theme",
+        "theme"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ambidexterich/hyper-fresh-material.git"
+    },
+    "author": "Rich Hamburg",
+    "bugs": {
+        "url": "https://github.com/ambidexterich/hyper-fresh-material/issues"
+    },
+    "homepage": "https://github.com/ambidexterich/hyper-fresh-material#readme",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    }
+}
