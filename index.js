@@ -32,14 +32,17 @@ const colors = {
     limeGreen: '#32CD32',
     lightCoral: '#F08080',
 };
-const accentColor = colors.magenta;
 
 exports.decorateConfig = config => {
+    const themeConfig = config.FreshMaterial || {};
+    const choosenTheme = (themeConfig.theme && themeConfig.theme.toLowerCase()) || 'default';
+    const accentColor =  themes[choosenTheme];
+
     return Object.assign({}, config, {
         backgroundColor,
-        cursorColor: '#964AB6CD',
+        cursorColor: `${accentColor}3D`,
         foregroundColor,
-        selectionColor: '#964AB64D',
+        selectionColor: `${accentColor}4D`,
         css: `
             ${config.css || ''}
             .tab_tab::before {
