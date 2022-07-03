@@ -1,70 +1,102 @@
-const foregroundColor = '#A6ADC0';
-const backgroundColor = '#282C34';
 
-const themes = {
-    blue: "#1D8CEB",
-    cyan: "#6FD8E5",
-    green: "#9FD067",
-    indigo: "#4B5DB6",
-    pink: "#E72E6B",
-    red: "#EA3E3F",
-    default: "#7049B8"
-}
-
-const colors = {
-    black: '#2E3D51',
-    red: '#B9362B',
-    green: '#36A252',
-    yellow: '#EC9F12',
-    blue: '#3E7DBB',
-    magenta: '#8D35B0',
-    cyan: '#34A284',
-    white: '#BEC3C7',
-    lightBlack: '#2C3B4D',
-    lightRed: '#DF483C',
-    lightGreen: '#3BB15A',
-    lightYellow: '#EBC807',
-    lightBlue: '#4B92DB',
-    lightMagenta: '#964AB6',
-    lightCyan: '#3EBE99',
-    lightWhite: '#ECF0F1',
-    lightWhite: '#FFFFFF',
-    limeGreen: '#32CD32',
-    lightCoral: '#F08080',
-};
+const {defaultConfig} = require('./default.config');
+const { themes } = require('./themes');
 
 exports.decorateConfig = config => {
     const themeConfig = config.FreshMaterial || {};
     const choosenTheme = (themeConfig.theme && themeConfig.theme.toLowerCase()) || 'default';
-    const accentColor =  themes[choosenTheme];
+    const accentColor = themeConfig.accentColor || themes[choosenTheme];
 
-    return Object.assign({}, config, {
-        backgroundColor,
-        cursorColor: `${accentColor}3D`,
-        foregroundColor,
-        selectionColor: `${accentColor}4D`,
-        css: `
-            ${config.css || ''}
-            .tab_tab::before {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 2px;
-                background-color: ${accentColor};
-                transform: scaleX(0);
-                transition: none;
-            }
-      
-            .tab_tab.tab_active {
-                color: #FFF;
-            }
-      
-            .tab_tab.tab_active::before {
-                transform: scaleX(1);
-                transition: all 300ms cubic-bezier(0.0, 0.0, 0.2, 1)
-            }
-        `
-    });
-}
+    config.backgroundColor = defaultConfig.backgroundColor;
+    config.colors = defaultConfig.colors;
+    config.cursorColor = accentColor;
+    config.cursorShape = themeConfig.cursorShape || defaultConfig.cursorShape;
+
+    config.padding = config.padding || defaultConfig.padding;
+    config.foregroundColor = config.foregroundColor || defaultConfig.foregroundColor;
+    config.selectionColor = '#FFFFFF1D';
+
+    config.termCSS = `
+        .xterm-text-layer a {
+            text-decoration: underline !important;
+            color: ${accentColor} !important;
+        }
+
+        *::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+            background-color: transparent;
+        }
+
+        *::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        *::-webkit-scrollbar-thumb:window-inactive {
+            background: transparent;
+        }
+
+        ${config.termCSS || ''}
+    `;
+
+    config.css = `
+        .hyper_main {
+            border: none;
+            background-color: ${config.backgroundColor};
+        }
+
+        .tabs_borderShim {
+            display: none;
+        }
+
+        .tabs_list .tab_tab {
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            background-color: transparent;
+        }
+
+        .tabs_list .tab_tab:hover {
+            background-color:  ${accentColor}66;
+        }
+
+        .tab_tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: ${accentColor};
+            transform: scaleX(0);
+            transition: none;
+        }
+
+        .tab_tab.tab_active {
+            color: #FFF;
+        }
+
+        .tab_tab.tab_active::before {
+            transform: scaleX(1);
+            transition: all 300ms cubic-bezier(0.0, 0.0, 0.2, 1)
+        }
+
+        .tab_textInner {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 100%;
+            padding: 0px 24px 0 8px;
+        }
+
+        .splitpane_divider {
+            background-color: rgba(0, 0, 0, 0.2) !important;
+        }
+
+        ${config.css || ''}
+    `;
+
+    return { ...config };
+};
